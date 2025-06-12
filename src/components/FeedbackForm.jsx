@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { QUESTIONS, SUBJECTS_AND_LABS, RATINGS } from "../constants/form-data";
+import RatingIcon from './RatingIcon'; // <-- Import the new component
 
-// Helper to initialize the table state (no changes needed here)
 const initializeTableState = () => {
   const initialState = {};
   QUESTIONS.forEach((_, qIndex) => {
@@ -14,14 +14,12 @@ const initializeTableState = () => {
   return initialState;
 };
 
-// The new, premium-styled FeedbackForm component
 const FeedbackForm = () => {
   const [feedback, setFeedback] = useState({
     ...initializeTableState(),
     suggestions: ""
   });
 
-  // State management logic (no changes needed here)
   const handleRatingChange = (qIndex, subjectKey, rating) => {
     setFeedback((prevFeedback) => ({
       ...prevFeedback,
@@ -40,13 +38,10 @@ const FeedbackForm = () => {
   };
 
   return (
-    // Main container with entry animation, consistent with the dashboard
     <div 
       className="w-full bg-white rounded-2xl shadow-2xl p-6 sm:p-10 my-8 max-w-7xl mx-auto opacity-0 animate-fade-in-up"
       style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}
     >
-      
-      {/* --- Refined Form Header --- */}
       <div className="text-center mb-6">
         <h1 className="text-3xl sm:text-4xl font-bold text-slate-800 tracking-tight">
           Syllabus Feedback Form
@@ -56,16 +51,16 @@ const FeedbackForm = () => {
         </p>
       </div>
       
-      {/* A subtle divider to add structure */}
       <hr className="my-8 border-slate-200" />
 
       <form onSubmit={handleSubmit}>
-        {/* --- Enhanced Form Table --- */}
-        <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white scrollbar-thin scrollbar-thumb-indigo-200 scrollbar-track-slate-100">
-          <table className="min-w-full table-auto text-sm">
-            <thead className="sticky top-0 z-10">
+        {/* --- Form Table with STICKY COLUMN --- */}
+        <div className="overflow-x-auto rounded-xl border border-slate-200 scrollbar-thin scrollbar-thumb-indigo-200 scrollbar-track-slate-100">
+          <table className="min-w-full table-auto text-sm border-collapse">
+            <thead className="sticky top-0 z-20">
               <tr className="bg-slate-50">
-                <th scope="col" className="w-1/4 min-w-[280px] px-4 py-4 text-left font-semibold text-slate-700">
+                {/* STICKY HEADER CELL */}
+                <th scope="col" className="sticky left-0 bg-slate-50 w-1/4 min-w-[300px] px-4 py-4 text-left font-semibold text-slate-700 z-10">
                   Question
                 </th>
                 {SUBJECTS_AND_LABS.map((subject, index) => (
@@ -79,7 +74,8 @@ const FeedbackForm = () => {
                 ))}
               </tr>
               <tr className="bg-slate-100">
-                <th scope="col" className="px-4 py-3 border-t border-slate-200"></th>
+                 {/* STICKY HEADER CELL (empty) */}
+                <th scope="col" className="sticky left-0 bg-slate-100 px-4 py-3 border-t border-slate-200 z-10"></th>
                 {SUBJECTS_AND_LABS.map((subject, index) =>
                   RATINGS.map((rating) => (
                     <th key={`${subject}-${rating}`} scope="col"
@@ -95,37 +91,34 @@ const FeedbackForm = () => {
             </thead>
             <tbody className="text-slate-700">
               {QUESTIONS.map((question, qIndex) => (
-                <tr key={`q${qIndex}`} className="hover:bg-indigo-50/50 transition-colors duration-200 border-t border-slate-200">
-                  <td className="text-left px-4 py-4 font-medium text-slate-800">
+                <tr key={`q${qIndex}`} className="border-t border-slate-200">
+                  {/* STICKY BODY CELL */}
+                  <td className="sticky left-0 bg-white px-4 py-4 text-left font-medium text-slate-800 z-10">
                     {question} <span className="text-red-500">*</span>
                   </td>
                   {SUBJECTS_AND_LABS.map((subject, index) => {
                     const subjectKey = subject.replace(/\s+/g, '_');
                     return RATINGS.map((rating) => (
                       <td key={`${qIndex}-${subjectKey}-${rating}`}
-                        className={`p-3 border-l border-slate-200 ${
-                          index % 2 !== 0 ? 'bg-slate-100/50' : 'bg-white'
+                        className={`p-3 border-l border-slate-200 transition-colors duration-200 hover:bg-indigo-50/50 ${
+                          index % 2 !== 0 ? 'bg-slate-50/50' : 'bg-white'
                         }`}
                       >
-                        <label className="flex justify-center items-center cursor-pointer">
+                        <label className="group flex justify-center items-center cursor-pointer w-full h-full">
                           <input
                             type="radio"
                             name={`${qIndex}-${subjectKey}`}
                             value={rating}
                             checked={feedback[`q${qIndex}`]?.[subjectKey] === rating}
                             onChange={() => handleRatingChange(qIndex, subjectKey, rating)}
-                            className="peer sr-only"
+                            className="sr-only"
                             required
                           />
-                          {/* Premium Custom Radio Button */}
-                          <div className="w-5 h-5 rounded-full border-2 border-slate-300 transition-all duration-300
-                                          hover:scale-110
-                                          peer-checked:bg-indigo-600 
-                                          peer-checked:border-indigo-600 
-                                          peer-checked:ring-2 
-                                          peer-checked:ring-indigo-300 
-                                          peer-checked:scale-110">
-                          </div>
+                          {/* --- CREATIVE RATING ICON --- */}
+                          <RatingIcon
+                            rating={rating}
+                            isSelected={feedback[`q${qIndex}`]?.[subjectKey] === rating}
+                          />
                         </label>
                       </td>
                     ));
@@ -136,7 +129,7 @@ const FeedbackForm = () => {
           </table>
         </div>
 
-        {/* --- Premium Open-ended Feedback Section --- */}
+        {/* --- Open-ended Feedback Section --- */}
         <div className="mt-10 sm:mt-12">
           <label htmlFor="suggestions" className="block text-lg font-semibold text-slate-800 mb-3">
             10. Suggestions for Improvement

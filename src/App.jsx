@@ -9,7 +9,6 @@ import FeedbackForm from './components/FeedbackForm';
 import FacilitiesForm from './pages/FacilitiesForm';
 import Navbar from './components/Navbar';
 
-// A layout for pages that have the Navbar
 const AppLayout = ({ children }) => (
   <>
     <Navbar />

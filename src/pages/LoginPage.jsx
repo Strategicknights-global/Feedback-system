@@ -11,10 +11,10 @@ const LoginPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setError(''); // Clear previous errors
+    setError('');
     const success = login(userId, password);
     if (success) {
-      navigate('/'); // Redirect to dashboard on successful login
+      navigate('/');
     } else {
       setError('User not found.');
     }

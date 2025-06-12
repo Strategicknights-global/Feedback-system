@@ -1,18 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; // 1. Import the useAuth hook
+import { useAuth } from '../context/AuthContext';
 
 const SelectionPage = () => {
-  const { logout } = useAuth(); // 2. Get the logout function from our context
+  const { logout } = useAuth();
 
-  // 3. Update the handleLogout function to use the real logout logic
   const handleLogout = () => {
     logout();
-    // The ProtectedRoute component will automatically handle redirecting to the login page.
   };
 
   return (
-    // The main container that holds the animated background
     <div className="relative min-h-screen overflow-hidden">
       
       {/* Animated Background Image */}
@@ -31,7 +28,7 @@ const SelectionPage = () => {
         <div 
           className="bg-white/10 backdrop-blur-md p-8 sm:p-12 rounded-2xl shadow-2xl text-center w-11/12 max-w-xl
                      border border-white/20 opacity-0 animate-fade-in-up"
-          style={{ animationFillMode: 'forwards' }} // Ensures the animation state persists
+          style={{ animationFillMode: 'forwards' }}
         >
           {/* Title */}
           <h2 
