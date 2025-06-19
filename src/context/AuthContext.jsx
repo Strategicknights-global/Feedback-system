@@ -1,36 +1,38 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from "react";
 
-const AuthContext = createContext(null);
+const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    localStorage.getItem('isAuthenticated') === 'true'
-  );
+export function useAuth() {
+  return useContext(AuthContext);
+}
 
-  const login = (userId, password) => {
-    const MOCK_USER = '2303717673721048';
-    const MOCK_PASS = 'password123';
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
 
-    if (userId === MOCK_USER && password === MOCK_PASS) {
-      localStorage.setItem('isAuthenticated', 'true');
-      setIsAuthenticated(true);
-      return true;
-    }
-    return false;
+  const login = (userData) => {
+    setUser(userData);
+    localStorage.setItem("user", JSON.stringify(userData));
   };
 
   const logout = () => {
-    localStorage.removeItem('isAuthenticated');
-    setIsAuthenticated(false);
+    setUser(null);
+    localStorage.removeItem("user");
   };
 
+  // (optional) Safety: sync localStorage if needed
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser && !user) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, [user]);
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+}

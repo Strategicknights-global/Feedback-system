@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -21,9 +21,12 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* Public Route */}
+          {/* Public Login Route */}
           <Route path="/login" element={<LoginPage />} />
           
+          {/* Default redirect to / if someone accesses unknown path */}
+          <Route path="*" element={<Navigate to="/" />} />
+
           {/* Protected Routes */}
           <Route 
             path="/" 
@@ -35,6 +38,7 @@ function App() {
               </ProtectedRoute>
             } 
           />
+
           <Route 
             path="/feedback/syllabus" 
             element={
@@ -45,6 +49,7 @@ function App() {
               </ProtectedRoute>
             } 
           />
+
           <Route 
             path="/feedback/facilities" 
             element={
